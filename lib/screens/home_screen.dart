@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/providers/theme_provider.dart';
 import 'package:todo_list_app/widgets/todo_tile.dart';
 import 'package:todo_list_app/widgets/bottom_sheet_widget.dart';
 
@@ -24,7 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    todoProvider = Provider.of<TodoProvider>(context, listen: false);
+    todoProvider = Provider.of<TodoProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -32,6 +34,25 @@ class _HomeScreenState extends State<HomeScreen> {
           "TO-DO List",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Row(
+            children: [
+              Icon(
+                themeProvider.themeMode == ThemeMode.dark
+                    ? Icons.nights_stay
+                    : Icons.wb_sunny,
+              ),
+              Switch(
+                value: themeProvider.themeMode == ThemeMode.dark,
+                onChanged: (value) {
+                  themeProvider.toggleTheme(value);
+                },
+                activeColor: Colors.blue, // Set the active color
+                inactiveThumbColor: Colors.grey, // Set the inactive thumb color
+              ),
+            ],
+          ),
+        ],
       ),
       body: GestureDetector(
         onTap: () {

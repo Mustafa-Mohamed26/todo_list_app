@@ -52,6 +52,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             children: [
               TextField(
                 controller: titleController,
+                cursorColor: Colors.blue, // Set cursor color to blue
                 decoration: InputDecoration(
                   labelText: "Title",
                   labelStyle: TextStyle(
@@ -72,6 +73,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
               SizedBox(height: 10),
               TextField(
                 controller: descriptionController,
+                cursorColor: Colors.blue, // Set cursor color to blue
                 decoration: InputDecoration(
                   labelText: "Description",
                   alignLabelWithHint: true,
@@ -99,7 +101,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                  
+
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
