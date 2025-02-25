@@ -13,10 +13,19 @@ class NoteDetailScreen extends StatefulWidget {
 }
 
 class _NoteDetailScreenState extends State<NoteDetailScreen> {
-  late TextEditingController titleController = TextEditingController();
-  late TextEditingController descriptionController = TextEditingController();
+  late TextEditingController titleController;
+  late TextEditingController descriptionController;
 
   late TodoProvider todoProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    titleController = TextEditingController(text: widget.todo.title);
+    descriptionController = TextEditingController(
+      text: widget.todo.description,
+    );
+  }
 
   @override
   void dispose() {
@@ -48,33 +57,99 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
     todoProvider = Provider.of<TodoProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Note Details'),
-        actions: [IconButton(icon: Icon(Icons.delete), onPressed: deleteTodo)],
+        title: Text(
+          "Note Details",
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(
+                  labelText: "Title",
+                  labelStyle: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-            TextField(
-              controller: descriptionController,
-              decoration: InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+              SizedBox(height: 10),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  alignLabelWithHint: true,
+                  labelStyle: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.blue),
+                  ),
+                ),
+                maxLines: null,
+                minLines: 5,
+                expands: false,
               ),
-              maxLines: null,
-              minLines: 5,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: updateTodo, child: Text('Update')),
-          ],
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: updateTodo,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text('Update'),
+                  ),
+                  SizedBox(width: 20), // Add spacing between the buttons
+                  ElevatedButton(
+                    onPressed: deleteTodo,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.red,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text('Delete'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
