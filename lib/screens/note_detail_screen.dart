@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/widgets/customDiscripInput.dart';
+import 'package:todo_list_app/widgets/customTitleInput.dart';
 
 class NoteDetailScreen extends StatefulWidget {
   final Todo todo;
@@ -17,6 +19,8 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   late TextEditingController descriptionController;
 
   late TodoProvider todoProvider;
+
+  final GlobalKey<FormState> formState = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -35,14 +39,16 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   }
 
   void updateTodo() {
-    final updatedTodo = Todo(
-      id: widget.todo.id,
-      title: titleController.text,
-      description: descriptionController.text,
-      isCompleted: widget.todo.isCompleted,
-    );
-    todoProvider.updateTodo(updatedTodo);
-    Navigator.pop(context);
+    if (formState.currentState!.validate()) {
+      final updatedTodo = Todo(
+        id: widget.todo.id,
+        title: titleController.text,
+        description: descriptionController.text,
+        isCompleted: widget.todo.isCompleted,
+      );
+      todoProvider.updateTodo(updatedTodo);
+      Navigator.pop(context);
+    }
   }
 
   void deleteTodo() {
@@ -65,90 +71,61 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  labelText: "Title",
-                  labelStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+          child: Form(
+            key: formState,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTitleInput(
+                  myController: titleController,
+                  valid: (val) {
+                    if (val!.isEmpty) {
+                      return "Field is empty";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: "Description",
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+                SizedBox(height: 10),
+                CustomDiscripinput(myController: descriptionController),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: updateTodo,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Update'),
+                    ),
+                    SizedBox(width: 20), // Add spacing between the buttons
+                    ElevatedButton(
+                      onPressed: deleteTodo,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text('Delete'),
+                    ),
+                  ],
                 ),
-                maxLines: null,
-                minLines: 5,
-                expands: false,
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: updateTodo,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text('Update'),
-                  ),
-                  SizedBox(width: 20), // Add spacing between the buttons
-                  ElevatedButton(
-                    onPressed: deleteTodo,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 10,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text('Delete'),
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

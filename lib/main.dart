@@ -6,6 +6,7 @@ import 'package:todo_list_app/screens/home_screen.dart';
 
 void main() {
   runApp(
+    // providers
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => TodoProvider()),
@@ -22,13 +23,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Todo List App',
+      // set up for the Dark mode
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       themeMode: themeProvider.themeMode,
+
       home: HomeScreen(),
     );
   }

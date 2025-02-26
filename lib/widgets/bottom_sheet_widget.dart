@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/widgets/customDiscripInput.dart';
+import 'package:todo_list_app/widgets/customTitleInput.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   const BottomSheetWidget({super.key});
@@ -11,21 +13,31 @@ class BottomSheetWidget extends StatefulWidget {
 }
 
 class _BottomSheetWidgetState extends State<BottomSheetWidget> {
+  // Controllers to control the data input coming from the Text Fields
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
+  // Key for validation
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
+
+  // This method controls the save todos operation in the application
   void saveTodo() {
-    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
-    final newTodo = Todo(
-      title: titleController.text,
-      description: descriptionController.text,
-    );
-    todoProvider.addTodo(newTodo);
-    titleController.clear(); // Clear the title text field
-    descriptionController.clear(); // Clear the description text field
-    Navigator.pop(context);
+    if (formState.currentState!.validate()) {
+      final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+      final newTodo = Todo(
+        title: titleController.text,
+        description: descriptionController.text,
+      ); // create a Todo object
+      todoProvider.addTodo(
+        newTodo,
+      ); // add the new object to the provider and the database
+      titleController.clear(); // Clear the title text field
+      descriptionController.clear(); // Clear the description text field
+      Navigator.pop(context);
+    }
   }
 
+  // After closing the bottom sheet, the controllers delete their data
   @override
   void dispose() {
     titleController.dispose();
@@ -33,6 +45,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
     super.dispose();
   }
 
+  // This method builds the UI of the bottom sheet
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -47,70 +60,38 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             right: 16.0,
             top: 16.0,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: titleController,
-                cursorColor: Colors.blue, // Set cursor color to blue
-                decoration: InputDecoration(
-                  labelText: "Title",
-                  labelStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+          child: Form(
+            key: formState,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomTitleInput(
+                  myController: titleController,
+                  valid: (val) {
+                    if (val!.isEmpty) {
+                      return "Field is empty";
+                    }
+                    return null;
+                  },
                 ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: descriptionController,
-                cursorColor: Colors.blue, // Set cursor color to blue
-                decoration: InputDecoration(
-                  labelText: "Description",
-                  alignLabelWithHint: true,
-                  labelStyle: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                SizedBox(height: 10),
+                CustomDiscripinput(myController: descriptionController),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue),
-                  ),
+                  onPressed: saveTodo,
+                  child: Text("Save", style: TextStyle(fontSize: 18)),
                 ),
-                maxLines: null,
-                minLines: 5,
-                expands: false,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                onPressed: saveTodo,
-                child: Text("Save", style: TextStyle(fontSize: 18)),
-              ),
-              SizedBox(height: 40),
-            ],
+                SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

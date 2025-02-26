@@ -25,6 +25,8 @@ class Todo {
     };
   }
 
+  /// Converts the Todo Map into a object representation, which is useful for
+  /// using the data in the application
   factory Todo.fromMap(Map<String, dynamic> map) {
     return Todo(
       id: map['id'],
