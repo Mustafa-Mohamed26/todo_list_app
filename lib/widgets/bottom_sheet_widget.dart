@@ -65,29 +65,38 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomTitleInput(
-                  myController: titleController,
-                  valid: (val) {
-                    if (val!.isEmpty) {
-                      return "Field is empty";
-                    }
-                    return null;
-                  },
+                Container(
+                  width: double.infinity,
+                  child: CustomTitleInput(
+                    myController: titleController,
+                    valid: (val) {
+                      if (val!.isEmpty) {
+                        return "Field is empty";
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 SizedBox(height: 10),
                 CustomDiscripinput(myController: descriptionController),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.blue,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    onPressed: saveTodo,
+                    child: Text("Save", style: TextStyle(fontSize: 18)),
                   ),
-                  onPressed: saveTodo,
-                  child: Text("Save", style: TextStyle(fontSize: 18)),
                 ),
                 SizedBox(height: 40),
               ],
