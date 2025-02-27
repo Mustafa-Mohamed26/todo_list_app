@@ -1,16 +1,24 @@
-# todo_list_app
+# 📋 To-Do List App
 
-A new Flutter project.
+A simple and efficient To-Do List application built with **Flutter** and **SQLite** to help you manage your tasks effectively.
 
-## Getting Started
+## 🚀 Features
+- 📝 Add, edit, and delete tasks
+- ✅ Mark tasks as completed
+- 🔥 Set task priorities (Low, Medium, High)
+- 💾 Persistent storage using **SQLite**
+- 🎨 Clean and intuitive UI
 
-This project is a starting point for a Flutter application.
+## 🛠 Tech Stack
+- **Framework:** Flutter
+- **Database:** SQLite
+- **State Management:** (Specify if you used Provider, Riverpod, etc.)
 
-A few resources to get you started if this is your first Flutter project:
+## 📸 Screenshots
+(Add images of your app UI here)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🎯 Installation
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-username/todo-list.git
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
