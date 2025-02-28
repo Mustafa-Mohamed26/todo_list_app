@@ -3,12 +3,18 @@ class Todo {
   String title;
   String description;
   bool isCompleted;
+  String category;
+  DateTime? deadline;
+  int priority;
 
   Todo({
     this.id,
     required this.title,
     required this.description,
     this.isCompleted = false,
+    required this.category,
+    required this.deadline,
+    required this.priority,
   });
 
   /// Converts the Todo object into a Map representation, which is useful for
@@ -21,7 +27,10 @@ class Todo {
       'id': id,
       'title': title,
       'description': description,
-      'isCompleted': isCompleted ? 1 : 0
+      'isCompleted': isCompleted ? 1 : 0,
+      'category': category,
+      'deadline': deadline?.toIso8601String(),
+      'priority': priority,
     };
   }
 
@@ -33,6 +42,10 @@ class Todo {
       title: map['title'],
       description: map['description'],
       isCompleted: map['isCompleted'] == 1,
+      category: map['category'],
+      deadline:
+          map['deadline'] != null ? DateTime.parse(map['deadline']) : null,
+      priority: map['priority'],
     );
   }
 }

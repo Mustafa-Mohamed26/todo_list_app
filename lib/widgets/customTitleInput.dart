@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class CustomTitleInput extends StatelessWidget {
   final TextEditingController myController;
   final String? Function(String?)? valid;
-  const CustomTitleInput({super.key, required this.myController,required this.valid});
+  const CustomTitleInput({
+    super.key,
+    required this.myController,
+    required this.valid,
+  });
 
   @override
   Widget build(BuildContext context) {

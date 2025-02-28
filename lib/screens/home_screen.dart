@@ -51,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     themeProvider.toggleTheme(value);
                   },
                   activeColor: Colors.blue, // Set the active color
-                  inactiveThumbColor: Colors.grey, // Set the inactive thumb color
+                  inactiveThumbColor:
+                      Colors.grey, // Set the inactive thumb color
                 ),
               ],
             ),
@@ -60,8 +61,12 @@ class _HomeScreenState extends State<HomeScreen> {
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Consumer<TodoProvider>(
               builder: (context, todoProvider, child) {
-                final allTasksCount = todoProvider.todos.where((todo)=>!todo.isCompleted).length;
-                final completedTasksCount = todoProvider.todos.where((todo) => todo.isCompleted).length;
+                final allTasksCount =
+                    todoProvider.todos
+                        .where((todo) => !todo.isCompleted)
+                        .length;
+                final completedTasksCount =
+                    todoProvider.todos.where((todo) => todo.isCompleted).length;
                 return TabBar(
                   onTap: (index) {
                     setState(() {
@@ -71,7 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   indicatorColor: Colors.blue,
                   labelColor: Colors.blue,
                   unselectedLabelColor: Colors.grey,
-                  labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  labelStyle: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                   tabs: [
                     Tab(
                       child: Row(
@@ -81,7 +89,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: _selectedIndex == 0 ? Colors.blue : Colors.grey,
+                              color:
+                                  _selectedIndex == 0
+                                      ? Colors.blue
+                                      : Colors.grey,
                               borderRadius: BorderRadius.circular(3),
                             ),
                             child: Text(
@@ -100,7 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: _selectedIndex == 1 ? Colors.blue : Colors.grey,
+                              color:
+                                  _selectedIndex == 1
+                                      ? Colors.blue
+                                      : Colors.grey,
                               borderRadius: BorderRadius.circular(3),
                             ),
                             child: Text(
@@ -125,34 +139,31 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pop(context);
             }
           },
-          child: TabBarView(
-            children: [
-              AllTabs(),
-              CompletedTabs(),
-            ],
-          ),
+          child: TabBarView(children: [AllTabs(), CompletedTabs()]),
         ),
-        floatingActionButton: isFabVisible
-            ? FloatingActionButton(
-                backgroundColor: Colors.blue,
-                foregroundColor: Colors.white,
-                child: Icon(Icons.add),
-                onPressed: () {
-                  setState(() {
-                    isFabVisible = false; // Hide the FAB when clicked
-                  });
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => BottomSheetWidget(),
-                  ).whenComplete(() {
+        floatingActionButton:
+            isFabVisible
+                ? FloatingActionButton(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  child: Icon(Icons.add),
+                  onPressed: () {
                     setState(() {
-                      isFabVisible = true; // Show the FAB again after the bottom sheet is closed
+                      isFabVisible = false; // Hide the FAB when clicked
                     });
-                  });
-                },
-              )
-            : null,
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => BottomSheetWidget(),
+                    ).whenComplete(() {
+                      setState(() {
+                        isFabVisible =
+                            true; // Show the FAB again after the bottom sheet is closed
+                      });
+                    });
+                  },
+                )
+                : null,
       ),
     );
   }

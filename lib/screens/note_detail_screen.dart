@@ -45,6 +45,9 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         title: titleController.text,
         description: descriptionController.text,
         isCompleted: widget.todo.isCompleted,
+        category: '',
+        deadline: null,
+        priority: 1,
       );
       todoProvider.updateTodo(updatedTodo);
       Navigator.pop(context);

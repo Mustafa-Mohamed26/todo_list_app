@@ -20,6 +20,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   // Key for validation
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
+  // Selected category
+  String? selectedCategory;
+
   // This method controls the save todos operation in the application
   void saveTodo() {
     if (formState.currentState!.validate()) {
@@ -27,6 +30,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       final newTodo = Todo(
         title: titleController.text,
         description: descriptionController.text,
+        category: selectedCategory ?? '',
+        deadline: null,
+        priority: 1,
       ); // create a Todo object
       todoProvider.addTodo(
         newTodo,
@@ -65,7 +71,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
+                SizedBox(
                   width: double.infinity,
                   child: CustomTitleInput(
                     myController: titleController,
@@ -80,7 +86,43 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 SizedBox(height: 10),
                 CustomDiscripinput(myController: descriptionController),
                 SizedBox(height: 20),
-                Container(
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Select Category',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 15,
+                  children:
+                      ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
+                        (category) {
+                          return ChoiceChip(
+                            label: Text(category),
+                            selected: selectedCategory == category,
+                            onSelected: (selected) {
+                              setState(() {
+                                selectedCategory = selected ? category : null;
+                              });
+                            },
+                            selectedColor: Colors.blue,
+                            backgroundColor: Colors.grey,
+                            labelStyle: TextStyle(
+                              color:
+                                  selectedCategory == category
+                                      ? Colors.white
+                                      : Colors.black,
+                              fontSize: 16,
+                            ),
+                          );
+                        },
+                      ).toList(),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(

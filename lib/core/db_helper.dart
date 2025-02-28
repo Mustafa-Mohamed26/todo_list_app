@@ -1,7 +1,6 @@
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'package:todo_list_app/models/todo_model.dart';
 
 class DBHelper {
@@ -22,21 +21,31 @@ class DBHelper {
   /// - title: TEXT
   /// - description: TEXT
   /// - isCompleted: INTEGER
+  /// - category: TEXT
+  /// - deadline: TEXT
+  /// - priority: INTEGER
   ///
   /// This function is private and should not be called directly. Instead, use the
   /// [database] getter to get the database instance.
   static Future<Database> _initDB() async {
     String path = join(await getDatabasesPath(), 'todo.db');
-    return await openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute('''
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) async {
+        await db.execute('''
           CREATE TABLE todos(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT,
             description TEXT,
-            isCompleted INTEGER
+            isCompleted INTEGER,
+            category TEXT,
+            deadline TEXT,
+            priority INTEGER
           )
         ''');
-    });
+      },
+    );
   }
 
   /// Inserts a todo into the database, returning the row id of the newly
@@ -66,8 +75,12 @@ class DBHelper {
   /// misconfigured or corrupted.
   static Future<int> updateTodo(Todo todo) async {
     final db = await database;
-    return await db
-        .update('todos', todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
+    return await db.update(
+      'todos',
+      todo.toMap(),
+      where: 'id = ?',
+      whereArgs: [todo.id],
+    );
   }
 
   /// Deletes a todo from the database by its [id].
@@ -76,7 +89,6 @@ class DBHelper {
   ///
   /// Returns the number of rows affected, which should be 1 if the delete operation
   /// was successful, or 0 if no todo with the specified [id] was found.
-
   static Future<int> deleteTodo(int id) async {
     final db = await database;
     return await db.delete('todos', where: 'id = ?', whereArgs: [id]);
