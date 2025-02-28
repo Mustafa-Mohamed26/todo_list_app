@@ -16,6 +16,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   // Controllers to control the data input coming from the Text Fields
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController deadlineController = TextEditingController();
 
   // Key for validation
   GlobalKey<FormState> formState = GlobalKey<FormState>();
@@ -31,7 +32,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
         title: titleController.text,
         description: descriptionController.text,
         category: selectedCategory ?? '',
-        deadline: null,
+        deadline:
+            deadlineController.text.isNotEmpty
+                ? DateTime.parse(deadlineController.text)
+                : null,
         priority: 1,
       ); // create a Todo object
       todoProvider.addTodo(
@@ -39,6 +43,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
       ); // add the new object to the provider and the database
       titleController.clear(); // Clear the title text field
       descriptionController.clear(); // Clear the description text field
+      deadlineController.clear(); // Clear the deadline text field
       Navigator.pop(context);
     }
   }
@@ -48,6 +53,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   void dispose() {
     titleController.dispose();
     descriptionController.dispose();
+    deadlineController.dispose();
     super.dispose();
   }
 
@@ -101,6 +107,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
                         (category) {
                           return ChoiceChip(
+                            showCheckmark: false,
                             label: Text(category),
                             selected: selectedCategory == category,
                             onSelected: (selected) {
@@ -115,11 +122,75 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                                   selectedCategory == category
                                       ? Colors.white
                                       : Colors.black,
-                              fontSize: 16,
                             ),
                           );
                         },
                       ).toList(),
+                ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Set Deadline',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: deadlineController,
+                  decoration: InputDecoration(
+                    labelText: 'Deadline',
+                    labelStyle: TextStyle(color: Colors.blue),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    prefixIcon: Icon(Icons.calendar_today, color: Colors.blue),
+                    
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2101),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: Colors.blue,
+                              onPrimary: Colors.white,
+                              onSurface: Colors.blue,
+                              
+                            ),
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(
+                              ),
+                            ),
+
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        deadlineController.text =
+                            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                      });
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a deadline';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 20),
                 SizedBox(
