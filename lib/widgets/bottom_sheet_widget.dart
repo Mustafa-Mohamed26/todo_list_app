@@ -4,6 +4,7 @@ import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
 import 'package:todo_list_app/widgets/customDiscripInput.dart';
 import 'package:todo_list_app/widgets/customTitleInput.dart';
+import 'package:todo_list_app/widgets/priority_radio_button.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   const BottomSheetWidget({super.key});
@@ -105,29 +106,33 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   alignment: WrapAlignment.start,
                   spacing: 20,
                   children:
-                      ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
-                        (category) {
-                          return ChoiceChip(
-                            showCheckmark: false,
-                            label: Text(category,style: TextStyle(fontSize: 16),),
-                            selected: selectedCategory == category,
-                            onSelected: (selected) {
-                              setState(() {
-                                selectedCategory = selected ? category : null;
-                              });
-                            },
-                            selectedColor: Colors.blue,
-                            backgroundColor: Colors.white,
-                            side: BorderSide(color: Colors.blue),
-                            labelStyle: TextStyle(
-                              color:
-                                  selectedCategory == category
-                                      ? Colors.white
-                                      : Colors.black,
-                            ),
-                          );
-                        },
-                      ).toList(),
+                      [
+                        'Work',
+                        'Education',
+                        'Shopping',
+                        'Personal',
+                        'Home',
+                      ].map((category) {
+                        return ChoiceChip(
+                          showCheckmark: false,
+                          label: Text(category, style: TextStyle(fontSize: 16)),
+                          selected: selectedCategory == category,
+                          onSelected: (selected) {
+                            setState(() {
+                              selectedCategory = selected ? category : null;
+                            });
+                          },
+                          selectedColor: Colors.blue,
+                          backgroundColor: Colors.white,
+                          side: BorderSide(color: Colors.blue),
+                          labelStyle: TextStyle(
+                            color:
+                                selectedCategory == category
+                                    ? Colors.white
+                                    : Colors.black,
+                          ),
+                        );
+                      }).toList(),
                 ),
                 SizedBox(height: 20),
                 Align(
@@ -202,11 +207,44 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: _buildPriorityRadio('Low', 1)),
+                    Expanded(
+                      child: PriorityRadioButton(
+                        label: 'Low',
+                        value: 1,
+                        selectedPriority: selectedPriority,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPriority = value;
+                          });
+                        },
+                      ),
+                    ),
                     SizedBox(width: 10),
-                    Expanded(child: _buildPriorityRadio('Medium', 2)),
+                    Expanded(
+                      child: PriorityRadioButton(
+                        label: 'Medium',
+                        value: 2,
+                        selectedPriority: selectedPriority,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPriority = value;
+                          });
+                        },
+                      ),
+                    ),
                     SizedBox(width: 10),
-                    Expanded(child: _buildPriorityRadio('High', 3)),
+                    Expanded(
+                      child: PriorityRadioButton(
+                        label: 'High',
+                        value: 3,
+                        selectedPriority: selectedPriority,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPriority = value;
+                          });
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(height: 20),
@@ -233,39 +271,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildPriorityRadio(String label, int value) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedPriority = value;
-        });
-      },
-      child: Row(
-        children: [
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: selectedPriority == value ? Colors.blue : Colors.grey,
-                width: 2,
-              ),
-              color: selectedPriority == value ? Colors.blue : Colors.white,
-            ),
-            child:
-                selectedPriority == value
-                    ? Icon(Icons.check, size: 20.0, color: Colors.white)
-                    : null,
-          ),
-          SizedBox(width: 8),
-          Text(label, style: TextStyle(fontSize: 16)),
-        ],
       ),
     );
   }
