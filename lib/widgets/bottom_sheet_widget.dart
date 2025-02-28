@@ -21,8 +21,9 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   // Key for validation
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
-  // Selected category
+  // Selected category and priority
   String? selectedCategory;
+  int? selectedPriority;
 
   // This method controls the save todos operation in the application
   void saveTodo() {
@@ -36,7 +37,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             deadlineController.text.isNotEmpty
                 ? DateTime.parse(deadlineController.text)
                 : null,
-        priority: 1,
+        priority: selectedPriority ?? 1,
       ); // create a Todo object
       todoProvider.addTodo(
         newTodo,
@@ -107,7 +108,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
                         (category) {
                           return ChoiceChip(
-                            showCheckmark: false,
                             label: Text(category),
                             selected: selectedCategory == category,
                             onSelected: (selected) {
@@ -150,7 +150,6 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                     prefixIcon: Icon(Icons.calendar_today, color: Colors.blue),
-                    
                   ),
                   readOnly: true,
                   onTap: () async {
@@ -166,13 +165,10 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                               primary: Colors.blue,
                               onPrimary: Colors.white,
                               onSurface: Colors.blue,
-                              
                             ),
                             textButtonTheme: TextButtonThemeData(
-                              style: TextButton.styleFrom(
-                              ),
+                              style: TextButton.styleFrom(),
                             ),
-
                           ),
                           child: child!,
                         );
@@ -191,6 +187,25 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     }
                     return null;
                   },
+                ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Set Priority',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(child: _buildPriorityRadio('Low', 1)),
+                    SizedBox(width: 10),
+                    Expanded(child: _buildPriorityRadio('Medium', 2)),
+                    SizedBox(width: 10),
+                    Expanded(child: _buildPriorityRadio('High', 3)),
+                  ],
                 ),
                 SizedBox(height: 20),
                 SizedBox(
@@ -216,6 +231,39 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPriorityRadio(String label, int value) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedPriority = value;
+        });
+      },
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: selectedPriority == value ? Colors.blue : Colors.grey,
+                width: 2,
+              ),
+              color: selectedPriority == value ? Colors.blue : Colors.white,
+            ),
+            child:
+                selectedPriority == value
+                    ? Icon(Icons.check, size: 20.0, color: Colors.white)
+                    : null,
+          ),
+          SizedBox(width: 8),
+          Text(label, style: TextStyle(fontSize: 16)),
+        ],
       ),
     );
   }
