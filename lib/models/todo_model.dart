@@ -21,7 +21,6 @@ class Todo {
   /// storing in a database. The keys represent the column names and the values
   /// are the corresponding field values. The `isCompleted` field is converted
   /// to an integer (1 for true, 0 for false).
-
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -42,10 +41,16 @@ class Todo {
       title: map['title'],
       description: map['description'],
       isCompleted: map['isCompleted'] == 1,
-      category: map['category'],
+      category: map['category'] ?? '',
       deadline:
           map['deadline'] != null ? DateTime.parse(map['deadline']) : null,
-      priority: map['priority'],
+      priority: map['priority'] ?? 1,
     );
+  }
+
+  /// Converts the deadline DateTime to a formatted string
+  String get formattedDeadline {
+    if (deadline == null) return '';
+    return "${deadline!.year}-${deadline!.month.toString().padLeft(2, '0')}-${deadline!.day.toString().padLeft(2, '0')}";
   }
 }

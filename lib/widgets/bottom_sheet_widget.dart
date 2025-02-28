@@ -108,6 +108,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
                         (category) {
                           return ChoiceChip(
+                            showCheckmark: false,
                             label: Text(category),
                             selected: selectedCategory == category,
                             onSelected: (selected) {

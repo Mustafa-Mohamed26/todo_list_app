@@ -22,8 +22,11 @@ class TodoTile extends StatelessWidget {
           todo.title,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(todo.description, style: TextStyle(fontSize: 16)),
-        trailing: Transform.scale(
+        subtitle: Text(
+          todo.deadline != null ? todo.formattedDeadline : 'No deadline',
+          style: TextStyle(fontSize: 16),
+        ),
+        leading: Transform.scale(
           scale: 1.2, // Adjust the scale factor to make the checkbox bigger
           child: Checkbox(
             checkColor: Colors.white,
@@ -36,13 +39,29 @@ class TodoTile extends StatelessWidget {
                 title: todo.title,
                 description: todo.description,
                 isCompleted: value!,
-                category: '',
-                deadline: null,
-                priority: 1,
+                category: todo.category,
+                deadline: todo.deadline,
+                priority: todo.priority,
               );
               todoProvider.updateTodo(updatedTodo);
             },
           ),
+        ),
+        trailing: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: _getPriorityColor(todo.priority),
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(todo.category, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ],
         ),
         onTap: () {
           Navigator.push(
@@ -54,5 +73,18 @@ class TodoTile extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Color _getPriorityColor(int priority) {
+    switch (priority) {
+      case 1:
+        return Colors.green;
+      case 2:
+        return Colors.yellow;
+      case 3:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

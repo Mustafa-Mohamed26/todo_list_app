@@ -31,19 +31,36 @@ class DBHelper {
     String path = join(await getDatabasesPath(), 'todo.db');
     return await openDatabase(
       path,
-      version: 1,
+      version: 4, // Incremented version number
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE todos(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT,
+            title TEXT NOT NULL,
             description TEXT,
-            isCompleted INTEGER,
+            isCompleted INTEGER NOT NULL DEFAULT 0,
             category TEXT,
             deadline TEXT,
             priority INTEGER
           )
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE todos ADD COLUMN category TEXT;
+          ''');
+        }
+        if (oldVersion < 3) {
+          await db.execute('''
+            ALTER TABLE todos ADD COLUMN deadline TEXT;
+          ''');
+        }
+        if (oldVersion < 4) {
+          await db.execute('''
+            ALTER TABLE todos ADD COLUMN priority INTEGER;
+          ''');
+        }
       },
     );
   }
