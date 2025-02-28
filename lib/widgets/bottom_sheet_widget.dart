@@ -103,13 +103,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                 SizedBox(height: 10),
                 Wrap(
                   alignment: WrapAlignment.start,
-                  spacing: 15,
+                  spacing: 20,
                   children:
                       ['Work', 'Education', 'Shopping', 'Personal', 'Home'].map(
                         (category) {
                           return ChoiceChip(
                             showCheckmark: false,
-                            label: Text(category),
+                            label: Text(category,style: TextStyle(fontSize: 16),),
                             selected: selectedCategory == category,
                             onSelected: (selected) {
                               setState(() {
@@ -117,7 +117,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                               });
                             },
                             selectedColor: Colors.blue,
-                            backgroundColor: Colors.grey,
+                            backgroundColor: Colors.white,
+                            side: BorderSide(color: Colors.blue),
                             labelStyle: TextStyle(
                               color:
                                   selectedCategory == category
