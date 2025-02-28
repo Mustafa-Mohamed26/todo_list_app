@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
@@ -27,28 +28,39 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   int? selectedPriority;
 
   // This method controls the save todos operation in the application
-  void saveTodo() {
-    if (formState.currentState!.validate()) {
-      final todoProvider = Provider.of<TodoProvider>(context, listen: false);
-      final newTodo = Todo(
-        title: titleController.text,
-        description: descriptionController.text,
-        category: selectedCategory ?? '',
-        deadline:
-            deadlineController.text.isNotEmpty
-                ? DateTime.parse(deadlineController.text)
-                : null,
-        priority: selectedPriority ?? 1,
-      ); // create a Todo object
-      todoProvider.addTodo(
-        newTodo,
-      ); // add the new object to the provider and the database
-      titleController.clear(); // Clear the title text field
-      descriptionController.clear(); // Clear the description text field
-      deadlineController.clear(); // Clear the deadline text field
-      Navigator.pop(context);
-    }
+void saveTodo() {
+  if (formState.currentState!.validate()) {
+    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+    final newTodo = Todo(
+      title: titleController.text,
+      description: descriptionController.text,
+      category: selectedCategory ?? '',
+      deadline: deadlineController.text.isNotEmpty
+          ? DateTime.parse(deadlineController.text)
+          : null,
+      priority: selectedPriority ?? 1,
+    );
+
+    todoProvider.addTodo(newTodo);
+
+    titleController.clear();
+    descriptionController.clear();
+    deadlineController.clear();
+
+    // Show success dialog
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.bottomSlide,
+      title: 'Success',
+      desc: 'Your task has been saved successfully!',
+      btnOkOnPress: () {
+        Navigator.pop(context); // Close the screen after confirmation
+      },
+    ).show();
   }
+}
+
 
   // After closing the bottom sheet, the controllers delete their data
   @override
