@@ -32,7 +32,7 @@ class PriorityRadioButton extends StatelessWidget {
                 color: selectedPriority == value ? Colors.blue : Colors.grey,
                 width: 2,
               ),
-              color: selectedPriority == value ? Colors.blue : Colors.white,
+              color: selectedPriority == value ? Colors.blue : null,
             ),
             child: selectedPriority == value
                 ? Icon(Icons.check, size: 20.0, color: Colors.white)

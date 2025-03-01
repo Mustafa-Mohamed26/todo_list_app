@@ -42,7 +42,7 @@ void saveTodo() {
     );
 
     todoProvider.addTodo(newTodo);
-
+    
     titleController.clear();
     descriptionController.clear();
     deadlineController.clear();
@@ -84,7 +84,7 @@ void saveTodo() {
             bottom: MediaQuery.of(context).viewInsets.bottom,
             left: 16.0,
             right: 16.0,
-            top: 16.0,
+            top: 50.0,
           ),
           child: Form(
             key: formState,
@@ -116,7 +116,8 @@ void saveTodo() {
                 SizedBox(height: 10),
                 Wrap(
                   alignment: WrapAlignment.start,
-                  spacing: 20,
+                  spacing: 15,
+                  runSpacing: 5,
                   children:
                       [
                         'Work',
@@ -127,7 +128,7 @@ void saveTodo() {
                       ].map((category) {
                         return ChoiceChip(
                           showCheckmark: false,
-                          label: Text(category, style: TextStyle(fontSize: 16)),
+                          label: Text(category, style: TextStyle(fontSize: 16,)),
                           selected: selectedCategory == category,
                           onSelected: (selected) {
                             setState(() {
@@ -135,13 +136,13 @@ void saveTodo() {
                             });
                           },
                           selectedColor: Colors.blue,
-                          backgroundColor: Colors.white,
+                          backgroundColor: null,
                           side: BorderSide(color: Colors.blue),
                           labelStyle: TextStyle(
                             color:
                                 selectedCategory == category
                                     ? Colors.white
-                                    : Colors.black,
+                                    : Colors.blue,
                           ),
                         );
                       }).toList(),
