@@ -47,7 +47,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         isCompleted: widget.todo.isCompleted,
         category: '',
         deadline: null,
-        priority: 1,
+        priority: 1, time: null,
       );
       todoProvider.updateTodo(updatedTodo);
       Navigator.pop(context);
@@ -70,6 +70,23 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
           "Note Details",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Container(
+            margin: EdgeInsets.only(right: 16),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.red,
+                width: 1,
+              ),
+            ),
+            child: IconButton(
+              icon: Icon(Icons.delete, size: 30),
+              color: Colors.red,
+              onPressed: deleteTodo,
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Padding(
@@ -108,22 +125,6 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                         ),
                       ),
                       child: Text('Update'),
-                    ),
-                    SizedBox(width: 20), // Add spacing between the buttons
-                    ElevatedButton(
-                      onPressed: deleteTodo,
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text('Delete'),
                     ),
                   ],
                 ),

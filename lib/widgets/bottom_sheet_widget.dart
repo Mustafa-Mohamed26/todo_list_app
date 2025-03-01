@@ -19,6 +19,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController deadlineController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
 
   // Key for validation
   GlobalKey<FormState> formState = GlobalKey<FormState>();
@@ -28,39 +29,47 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
   int? selectedPriority;
 
   // This method controls the save todos operation in the application
-void saveTodo() {
-  if (formState.currentState!.validate()) {
-    final todoProvider = Provider.of<TodoProvider>(context, listen: false);
-    final newTodo = Todo(
-      title: titleController.text,
-      description: descriptionController.text,
-      category: selectedCategory ?? '',
-      deadline: deadlineController.text.isNotEmpty
-          ? DateTime.parse(deadlineController.text)
-          : null,
-      priority: selectedPriority ?? 1,
-    );
+  void saveTodo() {
+    if (formState.currentState!.validate()) {
+      final todoProvider = Provider.of<TodoProvider>(context, listen: false);
+      final newTodo = Todo(
+        title: titleController.text,
+        description: descriptionController.text,
+        category: selectedCategory ?? '',
+        deadline:
+            deadlineController.text.isNotEmpty
+                ? DateTime.parse(deadlineController.text)
+                : null,
+        time:
+            timeController.text.isNotEmpty
+                ? TimeOfDay(
+                  hour: int.parse(timeController.text.split(':')[0]),
+                  minute: int.parse(timeController.text.split(':')[1]),
+                )
+                : null,
+        priority: selectedPriority ?? 1,
+      );
 
-    todoProvider.addTodo(newTodo);
-    
-    titleController.clear();
-    descriptionController.clear();
-    deadlineController.clear();
+      todoProvider.addTodo(newTodo);
 
-    // Show success dialog
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.success,
-      animType: AnimType.bottomSlide,
-      title: 'Success',
-      desc: 'Your task has been saved successfully!',
-      btnOkOnPress: () {
-        Navigator.pop(context); // Close the screen after confirmation
-      },
-    ).show();
+      titleController.clear();
+      descriptionController.clear();
+      deadlineController.clear();
+      timeController.clear();
+
+      // Show success dialog
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.success,
+        animType: AnimType.bottomSlide,
+        title: 'Success',
+        desc: 'Your task has been saved successfully!',
+        btnOkOnPress: () {
+          Navigator.pop(context); // Close the screen after confirmation
+        },
+      ).show();
+    }
   }
-}
-
 
   // After closing the bottom sheet, the controllers delete their data
   @override
@@ -68,6 +77,7 @@ void saveTodo() {
     titleController.dispose();
     descriptionController.dispose();
     deadlineController.dispose();
+    timeController.dispose();
     super.dispose();
   }
 
@@ -128,7 +138,7 @@ void saveTodo() {
                       ].map((category) {
                         return ChoiceChip(
                           showCheckmark: false,
-                          label: Text(category, style: TextStyle(fontSize: 16,)),
+                          label: Text(category, style: TextStyle(fontSize: 16)),
                           selected: selectedCategory == category,
                           onSelected: (selected) {
                             setState(() {
@@ -204,6 +214,65 @@ void saveTodo() {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please select a deadline';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Set Time',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(height: 10),
+                TextFormField(
+                  controller: timeController,
+                  decoration: InputDecoration(
+                    labelText: 'Time',
+                    labelStyle: TextStyle(color: Colors.blue),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.blue),
+                    ),
+                    prefixIcon: Icon(Icons.access_time, color: Colors.blue),
+                  ),
+                  readOnly: true,
+                  onTap: () async {
+                    TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                      builder: (context, child) {
+                        return Theme(
+                          data: Theme.of(context).copyWith(
+                            colorScheme: ColorScheme.light(
+                              primary: Colors.blue,
+                              onPrimary: Colors.white,
+                              onSurface: Colors.blue,
+                            ),
+                            textButtonTheme: TextButtonThemeData(
+                              style: TextButton.styleFrom(),
+                            ),
+                          ),
+                          child: child!,
+                        );
+                      },
+                    );
+                    if (pickedTime != null) {
+                      setState(() {
+                        timeController.text =
+                            "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                      });
+                    }
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select a time';
                     }
                     return null;
                   },

@@ -43,7 +43,7 @@ class TodoTile extends StatelessWidget {
                 isCompleted: value!,
                 category: todo.category,
                 deadline: todo.deadline,
-                priority: todo.priority,
+                priority: todo.priority, time: null,
               );
               todoProvider.updateTodo(updatedTodo);
             },

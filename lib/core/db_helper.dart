@@ -31,7 +31,7 @@ class DBHelper {
     String path = join(await getDatabasesPath(), 'todo.db');
     return await openDatabase(
       path,
-      version: 4, // Incremented version number
+      version: 5, // Incremented version number
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE todos(
@@ -41,6 +41,7 @@ class DBHelper {
             isCompleted INTEGER NOT NULL DEFAULT 0,
             category TEXT,
             deadline TEXT,
+            time TEXT,
             priority INTEGER
           )
         ''');
@@ -59,6 +60,11 @@ class DBHelper {
         if (oldVersion < 4) {
           await db.execute('''
             ALTER TABLE todos ADD COLUMN priority INTEGER;
+          ''');
+        }
+        if (oldVersion < 5) {
+          await db.execute('''
+            ALTER TABLE todos ADD COLUMN time TEXT;
           ''');
         }
       },
