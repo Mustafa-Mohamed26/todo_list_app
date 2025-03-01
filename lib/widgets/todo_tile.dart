@@ -23,7 +23,9 @@ class TodoTile extends StatelessWidget {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
-          todo.deadline != null ? todo.formattedDeadline : 'No deadline',
+          todo.deadline != null
+              ? todo.formattedDeadlineWithMonthName
+              : 'No deadline',
           style: TextStyle(fontSize: 16),
         ),
         leading: Transform.scale(
@@ -60,7 +62,10 @@ class TodoTile extends StatelessWidget {
               ),
             ),
             SizedBox(height: 6),
-            Text(todo.category, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            Text(
+              todo.category,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         onTap: () {

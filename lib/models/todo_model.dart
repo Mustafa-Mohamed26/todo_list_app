@@ -53,4 +53,15 @@ class Todo {
     if (deadline == null) return '';
     return "${deadline!.year}-${deadline!.month.toString().padLeft(2, '0')}-${deadline!.day.toString().padLeft(2, '0')}";
   }
+
+  /// Converts the deadline DateTime to a formatted string with abbreviated month name
+  String get formattedDeadlineWithMonthName {
+    if (deadline == null) return 'No deadline';
+    final monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    final monthName = monthNames[deadline!.month - 1];
+    return '$monthName ${deadline!.day}, ${deadline!.year}';
+  }
 }
