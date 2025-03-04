@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
 import 'package:todo_list_app/providers/theme_provider.dart';
-import 'package:todo_list_app/widgets/all_tabs.dart';
-import 'package:todo_list_app/widgets/completed_tabs.dart';
+import 'package:todo_list_app/widgets/tabs/CustomTab.dart';
+import 'package:todo_list_app/widgets/tabs/all_tabs.dart';
+import 'package:todo_list_app/widgets/tabs/completed_tabs.dart';
 import 'package:todo_list_app/widgets/bottom_sheet_widget.dart';
+import 'package:todo_list_app/widgets/tabs/time_out_tabs.dart';
+import 'package:todo_list_app/widgets/tabs/custom_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
     todoProvider = Provider.of<TodoProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
     return DefaultTabController(
-      length: 2,
+      length: 3, // Updated length to 3 to include the "Time Out" tab
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
@@ -61,12 +64,27 @@ class _HomeScreenState extends State<HomeScreen> {
             preferredSize: Size.fromHeight(kToolbarHeight),
             child: Consumer<TodoProvider>(
               builder: (context, todoProvider, child) {
+                final DateTime now = DateTime.now();
                 final allTasksCount =
                     todoProvider.todos
-                        .where((todo) => !todo.isCompleted)
+                        .where(
+                          (todo) =>
+                              !todo.isCompleted &&
+                              (todo.deadline == null ||
+                                  todo.deadline!.isAfter(now)),
+                        )
                         .length;
                 final completedTasksCount =
                     todoProvider.todos.where((todo) => todo.isCompleted).length;
+                final timeOutTasksCount =
+                    todoProvider.todos
+                        .where(
+                          (todo) =>
+                              todo.deadline != null &&
+                              todo.deadline!.isBefore(now) &&
+                              !todo.isCompleted,
+                        )
+                        .length;
                 return TabBar(
                   onTap: (index) {
                     setState(() {
@@ -77,53 +95,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   labelColor: Colors.blue,
                   unselectedLabelColor: Colors.grey,
                   labelStyle: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                   tabs: [
-                    Tab(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("All "),
-                          Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color:
-                                  _selectedIndex == 0
-                                      ? Colors.blue
-                                      : Colors.grey,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: Text(
-                              "$allTasksCount",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
+                    CustomTab(
+                      label: "All",
+                      count: allTasksCount,
+                      selectedIndex: _selectedIndex,
+                      tabIndex: 0,
                     ),
-                    Tab(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Completed "),
-                          Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                              color:
-                                  _selectedIndex == 1
-                                      ? Colors.blue
-                                      : Colors.grey,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: Text(
-                              "$completedTasksCount",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
+                    CustomTab(
+                      label: "Completed",
+                      count: completedTasksCount,
+                      selectedIndex: _selectedIndex,
+                      tabIndex: 1,
+                    ),
+                    CustomTab(
+                      label: "Time Out",
+                      count: timeOutTasksCount,
+                      selectedIndex: _selectedIndex,
+                      tabIndex: 2,
                     ),
                   ],
                 );
@@ -139,7 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pop(context);
             }
           },
-          child: TabBarView(children: [AllTabs(), CompletedTabs()]),
+          child: TabBarView(
+            children: [AllTabs(), CompletedTabs(), TimeOutTabs()],
+          ),
         ),
         floatingActionButton:
             isFabVisible

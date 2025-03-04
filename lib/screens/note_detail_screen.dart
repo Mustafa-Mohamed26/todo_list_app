@@ -9,8 +9,6 @@ import 'package:todo_list_app/widgets/customPriority.dart';
 import 'package:todo_list_app/widgets/customTime.dart';
 import 'package:todo_list_app/widgets/customTitleInput.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:todo_list_app/widgets/priority_radio_button.dart';
-
 class NoteDetailScreen extends StatefulWidget {
   final Todo todo;
 

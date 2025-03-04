@@ -9,19 +9,28 @@ class AllTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todoProvider = Provider.of<TodoProvider>(context);
+    final DateTime now = DateTime.now();
     final uncheckedTodos =
-        todoProvider.todos.where((todo) => !todo.isCompleted).toList();
+        todoProvider.todos.where((todo) {
+          if (todo.deadline != null) {
+            return !todo.isCompleted && todo.deadline!.isAfter(now);
+          }
+          return !todo.isCompleted;
+        }).toList();
+
     return Container(
       margin: EdgeInsets.all(10),
       child: FutureBuilder(
         future: todoProvider.loadTodos(),
         builder: (context, snapshot) {
-          return ListView.builder(
-            itemCount: uncheckedTodos.length,
-            itemBuilder: (context, index) {
-              return TodoTile(todo: uncheckedTodos[index]);
-            },
-          );
+          
+            return ListView.builder(
+              itemCount: uncheckedTodos.length,
+              itemBuilder: (context, index) {
+                return TodoTile(todo: uncheckedTodos[index]);
+              },
+            );
+          
         },
       ),
     );
