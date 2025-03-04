@@ -47,7 +47,7 @@ class TodoProvider with ChangeNotifier {
   /// [DBHelper.deleteTodo] method. After deleting the todo, it calls the
   /// [loadTodos] method to refresh the local list of todos and notify its
   /// listeners about the change.
-  Future<void> deleteTodo (int id) async {
+  Future<void> deleteTodo(int id) async {
     await DBHelper.deleteTodo(id);
     await loadTodos();
   }

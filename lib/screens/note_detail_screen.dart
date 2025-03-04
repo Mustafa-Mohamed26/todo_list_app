@@ -182,6 +182,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // =========================Title=========================
                   CustomTitleInput(
                     myController: titleController,
                     valid: (val) {
@@ -192,8 +193,10 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     },
                   ),
                   SizedBox(height: 10),
+                  // =========================Description=========================
                   CustomDiscripinput(myController: descriptionController),
                   SizedBox(height: 20),
+                  // =========================Category=========================
                   DropdownButtonFormField<String>(
                     value: widget.todo.category,
                     decoration: InputDecoration(
@@ -227,6 +230,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  // =========================Deadline=========================
                   TextFormField(
                     controller: deadlineController,
                     decoration: InputDecoration(
@@ -283,6 +287,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  // =========================Time=========================
                   TextFormField(
                     controller: timeController,
                     decoration: InputDecoration(
@@ -334,6 +339,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     },
                   ),
                   SizedBox(height: 20),
+                  // =========================Priority=========================
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

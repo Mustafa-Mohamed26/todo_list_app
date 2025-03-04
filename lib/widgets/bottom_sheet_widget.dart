@@ -101,6 +101,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // =========================Title=========================
                 SizedBox(
                   width: double.infinity,
                   child: CustomTitleInput(
@@ -113,9 +114,12 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     },
                   ),
                 ),
+
+                // =========================Description=========================
                 SizedBox(height: 10),
                 CustomDiscripinput(myController: descriptionController),
                 SizedBox(height: 20),
+                // =========================Category=========================
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -158,6 +162,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                       }).toList(),
                 ),
                 SizedBox(height: 20),
+                // =========================Deadline=========================
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -219,6 +224,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   },
                 ),
                 SizedBox(height: 20),
+                // =========================Time=========================
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -278,6 +284,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   },
                 ),
                 SizedBox(height: 20),
+                // =========================Priority=========================
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -330,6 +337,7 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ],
                 ),
                 SizedBox(height: 20),
+                // =========================Save Button=========================
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(

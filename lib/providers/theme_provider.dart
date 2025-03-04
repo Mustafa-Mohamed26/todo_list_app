@@ -21,7 +21,6 @@ class ThemeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   /// Loads the theme mode from local storage and updates the [_themeMode].
   ///
   /// Retrieves the 'isDarkMode' preference from [SharedPreferences]. If the
