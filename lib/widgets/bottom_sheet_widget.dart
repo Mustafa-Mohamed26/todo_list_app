@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/widgets/customCategory.dart';
+import 'package:todo_list_app/widgets/customDeadline.dart';
 import 'package:todo_list_app/widgets/customDiscripInput.dart';
+import 'package:todo_list_app/widgets/customPriority.dart';
+import 'package:todo_list_app/widgets/customTime.dart';
 import 'package:todo_list_app/widgets/customTitleInput.dart';
-import 'package:todo_list_app/widgets/priority_radio_button.dart';
 
 class BottomSheetWidget extends StatefulWidget {
   const BottomSheetWidget({super.key});
@@ -114,9 +117,8 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                     },
                   ),
                 ),
-
-                // =========================Description=========================
                 SizedBox(height: 10),
+                // =========================Description=========================
                 CustomDiscripinput(myController: descriptionController),
                 SizedBox(height: 20),
                 // =========================Category=========================
@@ -128,38 +130,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 15,
-                  runSpacing: 5,
-                  children:
-                      [
-                        'Work',
-                        'Education',
-                        'Shopping',
-                        'Personal',
-                        'Home',
-                      ].map((category) {
-                        return ChoiceChip(
-                          showCheckmark: false,
-                          label: Text(category, style: TextStyle(fontSize: 16)),
-                          selected: selectedCategory == category,
-                          onSelected: (selected) {
-                            setState(() {
-                              selectedCategory = selected ? category : null;
-                            });
-                          },
-                          selectedColor: Colors.blue,
-                          backgroundColor: null,
-                          side: BorderSide(color: Colors.blue),
-                          labelStyle: TextStyle(
-                            color:
-                                selectedCategory == category
-                                    ? Colors.white
-                                    : Colors.blue,
-                          ),
-                        );
-                      }).toList(),
+                CustomCategory(
+                  selectedCategory: selectedCategory,
+                  onCategorySelected: (category) {
+                    setState(() {
+                      selectedCategory = category;
+                    });
+                  },
                 ),
                 SizedBox(height: 20),
                 // =========================Deadline=========================
@@ -171,56 +148,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ),
                 ),
                 SizedBox(height: 10),
-                TextFormField(
-                  controller: deadlineController,
-                  decoration: InputDecoration(
-                    labelText: 'Deadline',
-                    labelStyle: TextStyle(color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                    prefixIcon: Icon(Icons.calendar_today, color: Colors.blue),
-                  ),
-                  readOnly: true,
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2101),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: ColorScheme.light(
-                              primary: Colors.blue,
-                              onPrimary: Colors.white,
-                              onSurface: Colors.blue,
-                            ),
-                            textButtonTheme: TextButtonThemeData(
-                              style: TextButton.styleFrom(),
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (pickedDate != null) {
-                      setState(() {
-                        deadlineController.text =
-                            "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                      });
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a deadline';
-                    }
-                    return null;
+                CustomDeadline(
+                  deadlineController: deadlineController,
+                  onDateSelected: (pickedDate) {
+                    setState(() {
+                      deadlineController.text =
+                          "${pickedDate!.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                    });
                   },
                 ),
                 SizedBox(height: 20),
@@ -233,54 +167,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ),
                 ),
                 SizedBox(height: 10),
-                TextFormField(
-                  controller: timeController,
-                  decoration: InputDecoration(
-                    labelText: 'Time',
-                    labelStyle: TextStyle(color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(color: Colors.blue),
-                    ),
-                    prefixIcon: Icon(Icons.access_time, color: Colors.blue),
-                  ),
-                  readOnly: true,
-                  onTap: () async {
-                    TimeOfDay? pickedTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: ColorScheme.light(
-                              primary: Colors.blue,
-                              onPrimary: Colors.white,
-                              onSurface: Colors.blue,
-                            ),
-                            textButtonTheme: TextButtonThemeData(
-                              style: TextButton.styleFrom(),
-                            ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (pickedTime != null) {
-                      setState(() {
-                        timeController.text =
-                            "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
-                      });
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a time';
-                    }
-                    return null;
+                CustomTime(
+                  timeController: timeController,
+                  onTimeSelected: (pickedTime) {
+                    setState(() {
+                      timeController.text =
+                          "${pickedTime!.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                    });
                   },
                 ),
                 SizedBox(height: 20),
@@ -293,48 +186,13 @@ class _BottomSheetWidgetState extends State<BottomSheetWidget> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: PriorityRadioButton(
-                        label: 'Low',
-                        value: 1,
-                        selectedPriority: selectedPriority,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPriority = value;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: PriorityRadioButton(
-                        label: 'Medium',
-                        value: 2,
-                        selectedPriority: selectedPriority,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPriority = value;
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: PriorityRadioButton(
-                        label: 'High',
-                        value: 3,
-                        selectedPriority: selectedPriority,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedPriority = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ],
+                CustomPriority(
+                  selectedPriority: selectedPriority,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPriority = value;
+                    });
+                  },
                 ),
                 SizedBox(height: 20),
                 // =========================Save Button=========================

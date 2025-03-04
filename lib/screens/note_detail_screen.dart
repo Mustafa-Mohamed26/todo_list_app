@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/models/todo_model.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
+import 'package:todo_list_app/widgets/customCategory.dart';
+import 'package:todo_list_app/widgets/customDeadline.dart';
 import 'package:todo_list_app/widgets/customDiscripInput.dart';
+import 'package:todo_list_app/widgets/customPriority.dart';
+import 'package:todo_list_app/widgets/customTime.dart';
 import 'package:todo_list_app/widgets/customTitleInput.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:todo_list_app/widgets/priority_radio_button.dart';
@@ -29,6 +33,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   late Todo originalTodo;
 
   int? selectedPriority;
+  String? selectedCategory;
 
   List<String> categories = [
     'Work',
@@ -68,6 +73,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
       time: widget.todo.time,
     );
     selectedPriority = widget.todo.priority;
+    selectedCategory = widget.todo.category;
   }
 
   @override
@@ -82,7 +88,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
   bool hasChanges() {
     return originalTodo.title != titleController.text ||
         originalTodo.description != descriptionController.text ||
-        originalTodo.category != widget.todo.category ||
+        originalTodo.category != selectedCategory ||
         originalTodo.deadline != widget.todo.deadline ||
         originalTodo.time != widget.todo.time ||
         originalTodo.priority != selectedPriority;
@@ -95,7 +101,7 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
         title: titleController.text,
         description: descriptionController.text,
         isCompleted: widget.todo.isCompleted,
-        category: widget.todo.category,
+        category: selectedCategory ?? '',
         deadline: widget.todo.deadline,
         priority: selectedPriority ?? 1,
         time: widget.todo.time,
@@ -197,145 +203,69 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                   CustomDiscripinput(myController: descriptionController),
                   SizedBox(height: 20),
                   // =========================Category=========================
-                  DropdownButtonFormField<String>(
-                    value: widget.todo.category,
-                    decoration: InputDecoration(
-                      labelText: 'Category',
-                      labelStyle: TextStyle(color: Colors.blue),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Select Category',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    items:
-                        categories.map((String category) {
-                          return DropdownMenuItem<String>(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }).toList(),
-                    onChanged: (String? newValue) {
+                  ),
+                  SizedBox(height: 10),
+                  CustomCategory(
+                    selectedCategory: selectedCategory,
+                    onCategorySelected: (category) {
                       setState(() {
-                        widget.todo.category = newValue!;
+                        selectedCategory = category;
                       });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a category';
-                      }
-                      return null;
                     },
                   ),
                   SizedBox(height: 20),
                   // =========================Deadline=========================
-                  TextFormField(
-                    controller: deadlineController,
-                    decoration: InputDecoration(
-                      labelText: 'Deadline',
-                      labelStyle: TextStyle(color: Colors.blue),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      prefixIcon: Icon(
-                        Icons.calendar_today,
-                        color: Colors.blue,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Set Deadline',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: widget.todo.deadline ?? DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2101),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: Colors.blue,
-                                onPrimary: Colors.white,
-                                onSurface: Colors.blue,
-                              ),
-                              textButtonTheme: TextButtonThemeData(
-                                style: TextButton.styleFrom(),
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      if (pickedDate != null) {
-                        setState(() {
-                          widget.todo.deadline = pickedDate;
-                          deadlineController.text =
-                              "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                        });
-                      }
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a deadline';
-                      }
-                      return null;
+                  ),
+                  SizedBox(height: 10),
+                  CustomDeadline(
+                    deadlineController: deadlineController,
+                    onDateSelected: (pickedDate) {
+                      setState(() {
+                        widget.todo.deadline = pickedDate;
+                        deadlineController.text =
+                            "${pickedDate!.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                      });
                     },
                   ),
                   SizedBox(height: 20),
                   // =========================Time=========================
-                  TextFormField(
-                    controller: timeController,
-                    decoration: InputDecoration(
-                      labelText: 'Time',
-                      labelStyle: TextStyle(color: Colors.blue),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Set Time',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      prefixIcon: Icon(Icons.access_time, color: Colors.blue),
                     ),
-                    readOnly: true,
-                    onTap: () async {
-                      TimeOfDay? pickedTime = await showTimePicker(
-                        context: context,
-                        initialTime: widget.todo.time ?? TimeOfDay.now(),
-                        builder: (context, child) {
-                          return Theme(
-                            data: Theme.of(context).copyWith(
-                              colorScheme: ColorScheme.light(
-                                primary: Colors.blue,
-                                onPrimary: Colors.white,
-                                onSurface: Colors.blue,
-                              ),
-                              textButtonTheme: TextButtonThemeData(
-                                style: TextButton.styleFrom(),
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      if (pickedTime != null) {
-                        setState(() {
-                          widget.todo.time = pickedTime;
-                          timeController.text =
-                              "${pickedTime.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
-                        });
-                      }
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a time';
-                      }
-                      return null;
+                  ),
+                  SizedBox(height: 10),
+                  CustomTime(
+                    timeController: timeController,
+                    onTimeSelected: (pickedTime) {
+                      setState(() {
+                        widget.todo.time = pickedTime;
+                        timeController.text =
+                            "${pickedTime!.hour.toString().padLeft(2, '0')}:${pickedTime.minute.toString().padLeft(2, '0')}";
+                      });
                     },
                   ),
                   SizedBox(height: 20),
@@ -352,48 +282,13 @@ class _NoteDetailScreenState extends State<NoteDetailScreen> {
                     ),
                   ),
                   SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: PriorityRadioButton(
-                          label: 'Low',
-                          value: 1,
-                          selectedPriority: selectedPriority,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPriority = value;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: PriorityRadioButton(
-                          label: 'Medium',
-                          value: 2,
-                          selectedPriority: selectedPriority,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPriority = value;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: PriorityRadioButton(
-                          label: 'High',
-                          value: 3,
-                          selectedPriority: selectedPriority,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedPriority = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
+                  CustomPriority(
+                    selectedPriority: selectedPriority,
+                    onChanged: (value) {
+                      setState(() {
+                        selectedPriority = value;
+                      });
+                    },
                   ),
                 ],
               ),
