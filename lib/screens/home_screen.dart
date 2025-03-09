@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list_app/providers/todo_provider.dart';
 import 'package:todo_list_app/providers/theme_provider.dart';
-import 'package:todo_list_app/widgets/tabs/CustomTab.dart';
+import 'package:todo_list_app/widgets/tabs/customTab.dart';
 import 'package:todo_list_app/widgets/tabs/all_tabs.dart';
 import 'package:todo_list_app/widgets/tabs/completed_tabs.dart';
 import 'package:todo_list_app/widgets/bottom_sheet_widget.dart';
 import 'package:todo_list_app/widgets/tabs/time_out_tabs.dart';
-import 'package:todo_list_app/widgets/tabs/custom_tab.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

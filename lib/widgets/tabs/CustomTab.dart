@@ -7,12 +7,12 @@ class CustomTab extends StatelessWidget {
   final int tabIndex;
 
   const CustomTab({
-    Key? key,
+    super.key,
     required this.label,
     required this.count,
     required this.selectedIndex,
     required this.tabIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
